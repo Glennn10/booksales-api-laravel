@@ -10,6 +10,28 @@ class AuthorController extends Controller
     {
         $authors = Author::withCount('books')->get();
 
-        return view('authors.index', compact('authors'));
+        return response()->json([
+            'success' => true,
+            'message' => 'Daftar penulis',
+            'data' => $authors,
+        ]);
+    }
+
+    public function show($id)
+    {
+        $author = Author::with('books')->find($id);
+
+        if (!$author) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Penulis tidak ditemukan',
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Detail penulis',
+            'data' => $author,
+        ]);
     }
 }
